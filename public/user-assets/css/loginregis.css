@@ -1,0 +1,131 @@
+/* ================================== */
+/* ===== HALAMAN LOGIN & REGISTER CSS ===== */
+/* ================================== */
+
+/* Left Panel (Image) */
+.auth-image-panel {
+    background-color: var(--primary-green);
+}
+
+.auth-image-arch {
+    width: 70%;
+    height: 80%;
+    background-color: #fff;
+    border-radius: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-image-arch::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%; /* Adjust this to control the arch height */
+    background-color: #f0f2f5; /* A slightly off-white for depth */
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+    transform: scaleX(1.5);
+}
+
+.auth-image-arch img {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: auto;
+    z-index: 1;
+}
+
+
+/* Right Panel (Form) */
+.auth-form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.auth-title {
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: #222;
+}
+
+.auth-subtitle {
+    color: #6c757d;
+}
+
+.auth-subtitle a {
+    color: var(--primary-green);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: .75rem;
+    padding: .75rem 1rem;
+    border: 1px solid #ced4da;
+}
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(13, 44, 35, 0.25);
+}
+
+.btn-auth-primary {
+    background-color: #212529; /* Dark button like in design */
+    color: #fff;
+    font-weight: 600;
+    padding: .75rem;
+    border-radius: .75rem;
+    transition: background-color 0.3s;
+}
+.btn-auth-primary:hover {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.btn-auth-secondary {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 500;
+    padding: .75rem;
+    border-radius: .75rem;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.btn-auth-secondary:hover {
+    background-color: #e9ecef;
+}
+.btn-auth-secondary img {
+    width: 20px;
+    height: 20px;
+}
+
+
+.auth-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #adb5bd;
+    margin: 1.5rem 0;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.auth-separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.auth-separator:not(:empty)::after {
+    margin-left: .5em;
+}
