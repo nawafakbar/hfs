@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -29,14 +31,47 @@ class OrderController extends Controller
     /**
      * Memperbarui status pesanan.
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, string $id)
     {
-        $request->validate(['status' => 'required|string']);
+        $order = Order::findOrFail($id);
+        $oldStatus = $order->status; // Ambil status lama
+        $newStatus = $request->status; // Ambil status baru dari form
 
-        $order->update(['status' => $request->status]);
+        // Update status order
+        $order->update([
+            'status' => $newStatus,
+        ]);
 
-        return redirect()->route('admin.orders.show', $order)
-                         ->with('success', 'Status pesanan berhasil diperbarui.');
+        // ==========================================================
+        // LOGIKA PENGURANGAN STOK
+        // ==========================================================
+        // Cek jika status diubah menjadi 'paid' (atau 'packaging') 
+        // DAN status sebelumnya BUKAN 'paid' (untuk mencegah pengurangan ganda)
+        if (
+            ($newStatus == 'paid' || $newStatus == 'packaging' || $newStatus == 'shipping' || $newStatus == 'completed') &&
+            ($oldStatus == 'pending' || $oldStatus == 'waiting_confirmation')
+        ) {
+
+            // Tandai kapan pembayaran dikonfirmasi
+            $order->update(['payment_confirmed_at' => now()]);
+
+            // Mulai transaksi database
+            DB::transaction(function () use ($order) {
+                $order->load('orderItems.product'); // Load relasi
+
+                foreach ($order->orderItems as $item) {
+                    $product = $item->product;
+                    if ($product) {
+                        // Kurangi stok
+                        $newStock = $product->stock - $item->quantity;
+                        $product->stock = $newStock >= 0 ? $newStock : 0;
+                        $product->save();
+                    }
+                }
+            });
+        }
+
+        return redirect()->route('admin.orders.show', $order->id)->with('success', 'Status pesanan berhasil diperbarui.');
     }
     
     /**

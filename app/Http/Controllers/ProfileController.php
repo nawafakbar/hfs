@@ -7,8 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
@@ -27,28 +27,41 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        // Mengambil data user yang sudah divalidasi
-        $validatedData = $request->validated();
+        $user = $request->user();
 
-        // Cek jika ada file gambar yang diupload
+        // Ambil data yang sudah tervalidasi
+        $validated = $request->validated();
+        $validated['provinsi'] = $request->provinsi_name;
+        $validated['kota'] = $request->kota_name;
+        $validated['kecamatan'] = $request->kecamatan_name;
+
+
+        // ----------------------------------------------------
+        // HANDLE FOTO PROFILE
+        // ----------------------------------------------------
         if ($request->hasFile('profile_photo')) {
+
             // Hapus foto lama jika ada
-            if ($request->user()->profile_photo_path) {
-                Storage::disk('public')->delete($request->user()->profile_photo_path);
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
             }
-            // Simpan foto baru dan dapatkan path-nya
+
+            // Simpan foto baru
             $path = $request->file('profile_photo')->store('profile-photos', 'public');
-            $validatedData['profile_photo_path'] = $path;
+            $validated['profile_photo_path'] = $path;
         }
 
-        // Cek jika email diubah, reset verifikasi email
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // ----------------------------------------------------
+        // HANDLE PERUBAHAN EMAIL
+        // ----------------------------------------------------
+        if ($validated['email'] !== $user->email) {
+            $validated['email_verified_at'] = null;
         }
 
-        // Update data user
-        $request->user()->fill($validatedData);
-        $request->user()->save();
+        // ----------------------------------------------------
+        // UPDATE DATA USER
+        // ----------------------------------------------------
+        $user->update($validated);
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -8,21 +8,31 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            
-            // --- TAMBAHKAN ATURAN UNTUK FIELD BARU DI SINI ---
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($this->user()->id)
+            ],
+
+            // ===============================
+            // FIELD PROFIL TAMBAHAN (WAJIB)
+            // ===============================
             'phone_number' => ['nullable', 'string', 'max:20'],
+            'provinsi' => ['nullable', 'string', 'max:255'],
+            'kota' => ['nullable', 'string', 'max:255'],
+            'kecamatan' => ['nullable', 'string', 'max:255'],
+            'kode_pos' => ['nullable', 'string', 'max:10'],
             'address' => ['nullable', 'string'],
-            'profile_photo' => ['nullable', 'image', 'max:2048'], // Izinkan file gambar maks 2MB
+
+            // FOTO PROFIL
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }
 }

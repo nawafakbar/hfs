@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,13 +11,35 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
+    /**
+     * Field yang boleh diisi menggunakan mass-assignment
+     */
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'profile_photo_path', 
-        'phone_number', 'address', 'google_id',
+        'name',
+        'email',
+        'password',
+        'role',
+        'profile_photo_path',
+        'phone_number',
+        'address',
+        'google_id',
+        'provinsi',
+        'kota',
+        'kecamatan',
+        'kode_pos',
     ];
 
-    protected $hidden = [ 'password', 'remember_token', ];
+    /**
+     * Field yang disembunyikan saat serialisasi
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
+    /**
+     * Casting tipe data
+     */
     protected function casts(): array
     {
         return [
@@ -25,13 +48,17 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    // Relasi: Satu User bisa punya banyak Order
+    /**
+     * Relasi ke tabel orders
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    // Relasi: Satu User bisa punya banyak Testimonial
+    /**
+     * Relasi ke tabel testimonials
+     */
     public function testimonials()
     {
         return $this->hasMany(Testimonial::class);

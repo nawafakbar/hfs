@@ -1,6 +1,18 @@
 @extends('layouts.admin')
 @section('page-title', 'Detail Pesanan')
 @section('content')
+
+@if($order->payment_proof)
+<div class="card mb-3">
+    <div class="card-header"><h3 class="card-title">Bukti Pembayaran</h3></div>
+    <div class="card-body text-center">
+        <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank">
+            <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Pembayaran" class="img-fluid rounded" style="max-height: 400px;">
+        </a>
+        <p class="mt-2 text-muted">Status saat ini: {{ $order->status }}</p>
+    </div>
+</div>
+@endif
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Detail Pesanan: {{ $order->invoice_number }}</h3>

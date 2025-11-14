@@ -31,7 +31,7 @@ Route::get('/category/{category:slug}', [HomeController::class, 'index'])->name(
 // Route::get('/shop', [ProductController::class, 'shop'])->name('shop.index');
 // Route::get('/shop/category/{category:slug}', [ProductController::class, 'shop'])->name('shop.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.detail');
-Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');
+// Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');
 
 // == RUTE UNTUK GOOGLE LOGIN ==
 Route::get('/auth/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
@@ -68,6 +68,11 @@ Route::middleware('auth')->group(function () {
     // RUTE BARU UNTUK HALAMAN PEMBAYARAN
     Route::get('/checkout/payment/{order:invoice_number}', [CheckoutController::class, 'payment'])->name('checkout.payment');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+    // Halaman untuk menampilkan form upload
+    Route::get('/orders/{order:invoice_number}/upload', [App\Http\Controllers\OrderController::class, 'showUploadForm'])->name('orders.uploadForm');
+    // Route untuk memproses file upload
+    Route::post('/orders/{order:invoice_number}/upload', [App\Http\Controllers\OrderController::class, 'storeUpload'])->name('orders.storeUpload');
 
     // == RUTE UNTUK PESANAN SAYA (CUSTOMER) ==
     Route::get('/my-orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');

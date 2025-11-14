@@ -1,55 +1,102 @@
 @extends('layouts.user')
-@section('title', 'Pembayaran')
+
+@section('title', 'Pembayaran Pesanan')
+
+{{-- Push CSS khusus ke layout --}}
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('user-assets/css/payment-card.css') }}">
+@endpush
+
 @section('content')
-<div class="container py-5 text-center" style="margin-top: 100px;">
-    <h2 class="mb-4">Selesaikan Pembayaran Anda</h2>
-    <p>Silakan klik tombol di bawah untuk melanjutkan proses pembayaran.</p>
-    <div class="card mx-auto" style="max-width: 400px;">
-        <div class="card-body">
-            <h5 class="card-title">Order #{{ $order->invoice_number }}</h5>
-            <p class="card-text">Total Tagihan:</p>
-            <h3 class="fw-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</h3>
-            <button id="pay-button" class="btn btn-brand w-100 mt-3">Bayar Sekarang</button>
+<div class="payment-overlay mt-5">
+    <div class="payment-card my-5">
+        
+        {{-- HEADER KARTU --}}
+        <div class="payment-card-header">
+            <h4>BGD Hydrofarm</h4>
+            <span class="invoice-id">Order ID: #{{ $order->invoice_number }}</span>
+        </div>
+
+        {{-- BODY KARTU --}}
+        <div class="payment-card-body">
+
+            {{-- GANTI DENGAN PATH GAMBAR QRIS-mu --}}
+            <img src="{{ asset('user-assets/images/qris.jpg') }}" alt="QRIS BGD Hydrofarm" class="payment-qris-image">
+            <div>
+            <a href="{{ asset('user-assets/images/qris.jpg') }}" download="QRIS_BGD_Hydrofarm.png" class="btn btn-sm btn-outline-success mb-3">
+                <i class="bi bi-download me-1"></i> Unduh QRIS
+            </a>
+            </div>
+
+            <div class="payment-summary mt-3 mb-4">
+            <strong>Rincian Pembayaran:</strong>
+            <ul class="list-unstyled mt-2">
+                <li class="d-flex justify-content-between">
+                    <span>Subtotal</span>
+                    <strong>Rp {{ number_format($order->total_amount - $order->shipping_cost, 0, ',', '.') }}</strong>
+                </li>
+
+                <li class="d-flex justify-content-between">
+                    <span>Ongkir</span>
+                    <strong>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</strong>
+                </li>
+            </ul>
+        </div>
+
+            <div class="payment-total">
+                <p class="payment-total-label">Total Pembayaran</p>
+                <h2 class="payment-total-amount">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</h2>
+            </div>
+            
+            <div id="payment-timer">Batas Waktu Pembayaran: 09:59</div>
+
+            <div class="payment-instructions">
+                <strong>Cara Pembayaran:</strong>
+                <ul>
+                    <li>Buka aplikasi e-wallet (GoPay, OVO, DANA, dll) atau M-Banking Anda.</li>
+                    <li>Scan QR Code di atas.</li>
+                    <li>Pastikan nominal pembayaran sudah sesuai.</li>
+                    <li>Selesaikan pembayaran.</li>
+                </ul>
+            </div>
+        </div>
+
+        {{-- FOOTER KARTU --}}
+        <div class="payment-card-footer">
+            <p>Setelah membayar, silakan upload bukti transfer di halaman "Pesanan Saya".</p>
+            <a href="{{ route('orders.index') }}" class="btn btn-brand" style="font-size: 15px">Ke Halaman Pesanan Saya</a>
         </div>
     </div>
 </div>
+
 @endsection
 
 @push('scripts')
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
-<script type="text/javascript">
-    function payNow() {
-        snap.pay('{{ $snapToken }}', {
-            onSuccess: function(result){
-                // PERUBAHAN DI SINI: kirim invoice number (order_id) ke URL
-                window.location.href = '{{ route("checkout.success") }}?invoice=' + result.order_id;
-            },
-            onPending: function(result){
-                alert("Menunggu pembayaran Anda!");
-                window.location.href = '{{ route("orders.index") }}'; // Ubah ke riwayat pesanan
-            },
-            onError: function(result){
-                alert("Pembayaran gagal!");
-                window.location.href = '{{ route("orders.index") }}'; // Ubah ke riwayat pesanan
-            },
-            
-            // PERUBAHAN UTAMA DI SINI
-            onClose: function(){
-                alert('Pesanan Anda telah dibuat. Selesaikan pembayaran nanti di halaman "Pesanan Saya".');
-                // Alihkan ke halaman riwayat pesanan
-                window.location.href = '{{ route("orders.index") }}';
+{{-- Script untuk timer countdown 10 menit --}}
+<script>
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        var interval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = "Batas Waktu Pembayaran: " + minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                display.textContent = "Waktu pembayaran habis";
+                // Kamu bisa tambahkan logic untuk mengalihkan user jika waktu habis
             }
-        });
+        }, 1000);
     }
 
-    // Panggil pembayaran secara otomatis saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        payNow();
-    });
-
-    // Juga tambahkan listener ke tombol sebagai cadangan
-    document.getElementById('pay-button').onclick = function(){
-        payNow();
+    window.onload = function () {
+        var tenMinutes = 60 * 10, // 10 menit
+            display = document.querySelector('#payment-timer');
+        startTimer(tenMinutes, display);
     };
 </script>
 @endpush

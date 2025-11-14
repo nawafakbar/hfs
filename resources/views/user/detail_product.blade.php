@@ -56,6 +56,12 @@
                 <div class="product-meta">
                     <p><strong>Categories:</strong> 
                         <a href="#" class="badge bg-light text-dark">{{ $product->category->name }}</a>
+                        <strong class="ms-3">Stok: </strong> 
+                        @if($product->stock > 0)
+                            <span class="badge bg-light text-dark">{{ $product->stock }}</span>
+                        @else
+                            <span class="badge bg-light text-dark">Stok Habis</span>
+                        @endif
                     </p>
                     <p><i class="bi bi-instagram me-2"></i> BGD_hydrofarm</p>
                 </div>

@@ -35,24 +35,28 @@
                         {{-- PERUBAHAN UTAMA DI SINI --}}
                         <td>
                             @if ($order->status == 'pending')
-                                <span class="badge bg-warning text-dark">Menunggu Pembayaran</span>
+                                <span class="badge bg-danger">Belum Dibayar</span>
+                            @elseif ($order->status == 'waiting_confirmation')
+                                <span class="badge bg-warning text-dark">Menunggu Konfirmasi</span>
+                            @elseif ($order->status == 'shipping')
+                                <span class="badge bg-warning text-dark">Dalam Perjalanan</span>
                             @elseif ($order->status == 'paid')
                                 <span class="badge bg-success">Sudah Dibayar</span>
-                            @elseif ($order->status == 'packaging')
-                                <span class="badge bg-info">Sedang Dikemas</span>
-                            @elseif ($order->status == 'shipping')
-                                <span class="badge bg-primary">Sedang Dikirim</span>
-                            @elseif ($order->status == 'completed')
-                                <span class="badge bg-secondary">Selesai</span>
-                            @elseif ($order->status == 'cancelled')
-                                <span class="badge bg-danger">Dibatalkan</span>
+                            @else
+                                <span class="badge bg-secondary">{{ ucfirst($order->status) }}</span>
                             @endif
                         </td>
                         <td>
                             @if ($order->status == 'pending')
-                                {{-- TOMBOL BAYAR LAGI --}}
-                                <a href="{{ route('checkout.payment', $order->invoice_number) }}" class="btn btn-outline-danger btn-sm">
-                                    Bayar Sekarang
+                                <a href="{{ route('checkout.payment', $order->invoice_number) }}" class="btn btn-warning btn-sm">
+                                    Bayar
+                                </a>
+                                <a href="{{ route('orders.uploadForm', $order->invoice_number) }}" class="btn btn-outline-primary btn-sm">
+                                    Upload Bukti
+                                </a>
+                            @elseif ($order->status == 'waiting_confirmation')
+                                <a href="{{ route('orders.show', $order->invoice_number) }}" class="btn btn-outline-info btn-sm">
+                                    Lihat Detail
                                 </a>
                             @else
                                 <a href="{{ route('orders.show', $order->invoice_number) }}" class="btn btn-outline-info btn-sm">

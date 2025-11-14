@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Cart;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Helper untuk mendapatkan instance keranjang milik user yang login
-     */
     private function getCart()
     {
         $userId = auth()->id();
@@ -20,29 +18,37 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        if ($this->getCart()->isEmpty()) { // <-- Gunakan helper
+        if ($this->getCart()->getTotal() <= 0) { 
             return redirect()->route('cart.index')->withErrors('Keranjang Anda kosong!');
         }
+
         return view('user.checkout');
     }
 
     public function process(Request $request)
     {
-        if ($this->getCart()->isEmpty()) { // <-- Gunakan helper
-            return redirect()->route('cart.index')->withErrors('Keranjang Anda kosong.');
+        $total = $this->getCart()->getTotal();
+        if ($total <= 0) {
+            return redirect()->route('cart.index')->withErrors('Keranjang Anda kosong atau totalnya nol.');
         }
 
         $user = auth()->user();
-        
+
+        // --- HITUNG ONGKIR BERDASARKAN KECAMATAN ---
+        $ongkir = config('ongkir.zona_padang')[$user->kecamatan] ?? 0;
+
+        // --- SIMPAN ORDER ---
         $order = Order::create([
             'user_id' => $user->id,
             'invoice_number' => 'INV-' . time() . '-' . $user->id,
-            'total_amount' => $this->getCart()->getTotal(), // <-- Gunakan helper
+            'total_amount' => $total + $ongkir,
+            'shipping_cost' => $ongkir,
             'shipping_address' => $user->address,
             'status' => 'pending',
         ]);
 
-        foreach ($this->getCart()->getContent() as $item) { // <-- Gunakan helper
+        // --- SIMPAN ITEM ORDER ---
+        foreach ($this->getCart()->getContent() as $item) {
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->id,
@@ -51,48 +57,32 @@ class CheckoutController extends Controller
             ]);
         }
 
-        $this->getCart()->clear(); // <-- Gunakan helper
+        // --- KOSONGKAN CART ---
+        $this->getCart()->clear();
 
+        // --- PINDAH KE HALAMAN PEMBAYARAN ---
         return redirect()->route('checkout.payment', $order->invoice_number);
     }
 
-    // METHOD BARU: Untuk menangani halaman pembayaran
     public function payment(Order $order)
     {
-        // Konfigurasi Midtrans
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production');
-        \Midtrans\Config::$isSanitized  = true;
-        \Midtrans\Config::$is3ds        = true;
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
 
-        // Siapkan parameter untuk Midtrans
-        $params = [
-            'transaction_details' => [ 'order_id' => $order->invoice_number, 'gross_amount' => $order->total_amount ],
-            'customer_details' => [ 'first_name' => $order->user->name, 'email' => $order->user->email, 'phone' => $order->user->phone_number ],
-        ];
-
-        // Dapatkan Snap Token
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-        // Tampilkan view pembayaran dengan snapToken
-        return view('user.payment', compact('snapToken', 'order'));
+        return view('user.payment', compact('order'));
     }
 
     public function success(Request $request)
     {
-        // Ambil invoice number dari URL
         $invoice_number = $request->query('invoice');
-        
-        // Cari order berdasarkan invoice number. Jika tidak ada, redirect ke home.
-        $order = Order::where('invoice_number', $invoice_number)
-                      ->where('user_id', auth()->id())
-                      ->first();
+        $order = Order::where('invoice_number', $invoice_number)->first();
         
         if (!$order) {
-            return redirect()->route('home');
+            return view('user.checkout_success_simple');
         }
 
-        // Kirim data order ke view
+        $order->load('orderItems.product');
         return view('user.checkout_success', compact('order'));
     }
 }

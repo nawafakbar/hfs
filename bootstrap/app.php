@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Ini adalah cara yang benar untuk mengecualikan CSRF
         $middleware->validateCsrfTokens(except: [
-            '/midtrans/callback',
+            // hapus brodi '/midtrans/callback',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

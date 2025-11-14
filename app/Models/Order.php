@@ -11,6 +11,7 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'invoice_number', 'total_amount', 'shipping_address', 
         'status', 'payment_method', 'shipping_cost',
+        'payment_proof', 'payment_confirmed_at',
     ];
 
     // Relasi: Satu Order milik satu User
