@@ -97,64 +97,87 @@
             ]);
 
             // ===================================
-        //    LOGIKA NOTIFIKASI TELEGRAM (PINDAH KE SINI)
-        // ===================================
-        try {
-            $token = env('TELEGRAM_BOT_TOKEN');
-            $chatId = env('TELEGRAM_CHAT_ID');
-            $user = $order->user;
-            $adminLink = route('admin.orders.show', $order->id);
+            //     LOGIKA NOTIFIKASI TELEGRAM
+            // ===================================
+            try {
+                
+                // ===== INI YANG DIGANTI =====
+                // Ambil dari 'config', BUKAN 'env'
+                $token = config('services.telegram.token');
+                $chatId = config('services.telegram.chat_id');
+                // ===== AKHIR PERUBAHAN =====
 
-            // Tentukan teks pengiriman
-            $jenisPengiriman = $order->shipping_method === 'pickup'
-                ? "Ambil di Gudang (GRATIS)"
-                : "Diantar ke Alamat";
+                // Cek jika config tidak ada (untuk keamanan)
+                if (!$token || !$chatId) {
+                    Log::error("Telegram Token atau Chat ID tidak diset di config/services.php");
+                    // Lanjutkan tanpa kirim notif
+                    return redirect()->route('orders.index')->with('success', 'Bukti pembayaran berhasil di-upload dan sedang menunggu konfirmasi admin.');
+                }
 
-            // Format ongkir
-            $ongkirText = $order->shipping_method === 'pickup'
-                ? 0
-                : $order->shipping_cost;
+                $user = $order->user;
+                // Pastikan kamu punya route 'admin.orders.show'
+                // Jika tidak, ganti ini jadi URL admin-mu
+                try {
+                    $adminLink = route('admin.orders.show', $order->id);
+                } catch (\Exception $e) {
+                    $adminLink = url('/admin/orders/' . $order->id); // Fallback
+                }
 
-            // Format angka
-            $format = fn($n) => "Rp " . number_format($n, 0, ',', '.');
+                // Tentukan teks pengiriman
+                $jenisPengiriman = $order->shipping_method === 'pickup'
+                    ? "Ambil di Gudang (GRATIS)"
+                    : "Diantar ke Alamat";
 
-            // Hitung subtotal (total tanpa ongkir)
-            $subtotal = $order->total_amount - $ongkirText;
+                // Format ongkir
+                $ongkirText = $order->shipping_method === 'pickup'
+                    ? 0
+                    : $order->shipping_cost;
 
-            // ======= PESAN =======
-            $message  = "🔔 *Notifikasi Pesanan Baru* 🔔\n\n";
-            $message .= "Ada pesanan baru masuk!\n\n";
+                // Format angka
+                $format = fn($n) => "Rp " . number_format($n, 0, ',', '.');
 
-            $message .= "*Invoice:* {$order->invoice_number}\n";
-            $message .= "*Nama:* {$user->name}\n";
-            $message .= "*No. HP:* {$user->phone_number}\n";
-            $message .= "*Alamat:* {$user->address}\n\n";
+                // Hitung subtotal (total tanpa ongkir)
+                $subtotal = $order->total_amount - $ongkirText;
 
-            // ======= DETAIL HARGA =======
-            $message .= "*🧾 Rincian Harga*\n";
-            $message .= "Subtotal: " . $format($subtotal) . "\n";
-            $message .= "Ongkos Kirim: " . $format($ongkirText) . "\n";
-            $message .= "----------------------------------------\n";
-            $message .= "*Total Akhir: " . $format($order->total_amount) . "*\n\n";
+                // ======= PESAN =======
+                $message  = "🔔 *Notifikasi Pesanan Baru* 🔔\n\n";
+                $message .= "Ada pesanan baru masuk!\n\n";
 
-            // ======= INFO PENGIRIMAN =======
-            $message .= "*Metode Pengiriman:* {$jenisPengiriman}\n";
+                $message .= "*Invoice:* {$order->invoice_number}\n";
+                $message .= "*Nama:* {$user->name}\n";
+                
+                // Cek jika user punya phone_number (karena kita ganti struktur user)
+                $noHp = $user->telepon ?? $user->phone_number ?? '-'; // Ambil 'telepon' atau 'phone_number'
+                $alamat = $user->alamat_lengkap ?? $user->address ?? '-'; // Ambil 'alamat_lengkap' atau 'address'
+                
+                $message .= "*No. HP:* {$noHp}\n";
+                $message .= "*Alamat:* {$alamat}\n\n";
 
-            $message .= "----------------------------------------\n";
-            $message .= "Klik link berikut untuk mengecek detail pesanan:\n";
-            $message .= $adminLink . "\n\n";
-            $message .= "Website: https://bgdhydrofarm.com";
+                // ======= DETAIL HARGA =======
+                $message .= "*🧾 Rincian Harga*\n";
+                $message .= "Subtotal: " . $format($subtotal) . "\n";
+                $message .= "Ongkos Kirim: " . $format($ongkirText) . "\n";
+                $message .= "----------------------------------------\n";
+                $message .= "*Total Akhir: " . $format($order->total_amount) . "*\n\n";
 
-            // Kirim request ke API Telegram
-            Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
-                'chat_id' => $chatId,
-                'text' => $message,
-                'parse_mode' => 'Markdown',
-            ]);
+                // ======= INFO PENGIRIMAN =======
+                $message .= "*Metode Pengiriman:* {$jenisPengiriman}\n";
 
-        } catch (\Exception $e) {
-            Log::error("Gagal mengirim Telegram: " . $e->getMessage());
-        }
+                $message .= "----------------------------------------\n";
+                $message .= "Klik link berikut untuk mengecek detail pesanan:\n";
+                $message .= $adminLink . "\n\n";
+                $message .= "Website: https://bgdhydrofarm.com";
+
+                // Kirim request ke API Telegram
+                Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                    'chat_id' => $chatId,
+                    'text' => $message,
+                    'parse_mode' => 'Markdown',
+                ]);
+
+            } catch (\Exception $e) {
+                Log::error("Gagal mengirim Telegram: " . $e->getMessage());
+            }
 
         // ===================================
 
