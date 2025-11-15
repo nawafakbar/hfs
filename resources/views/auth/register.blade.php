@@ -10,7 +10,7 @@
 
     <div class="d-grid">
         <a href="{{ route('google.redirect') }}" class="btn btn-auth-secondary">
-            <img src="{{ asset('user-assets/images/google.png') }}" alt="Google logo" class="me-2">
+            <img src="{{ asset('user-assets/Images/google.png') }}" alt="Google logo" class="me-2">
             Sign Up with Google
         </a>
     </div>

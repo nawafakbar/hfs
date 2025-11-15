@@ -20,7 +20,7 @@
 
         {{-- BAGIAN LOGO (BRAND) --}}
         <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-            <img src="{{ asset('user-assets/images/logo.png') }}" alt="Logo" class="me-2" style="width: 30px; height: auto;">
+            <img src="{{ asset('user-assets/Images/logo.png') }}" alt="Logo" class="me-2" style="width: 30px; height: auto;">
             Bgd Hydrofarm
         </a>
 
