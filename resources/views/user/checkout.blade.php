@@ -52,19 +52,35 @@
 
                     <div class="d-flex justify-content-between">
                         <span>Ongkir ({{ $kecamatan }})</span>
-                        <span>Rp {{ number_format($ongkir, 0, ',', '.') }}</span>
+                        <span id="ongkir_display">
+                            Rp {{ number_format($ongkir, 0, ',', '.') }}
+                        </span>
                     </div>
 
                     <hr>
 
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Total</span>
-                        <span>Rp {{ number_format($subtotal + $ongkir, 0, ',', '.') }}</span>
+                        <span id="total_display">
+                            Rp {{ number_format($subtotal + $ongkir, 0, ',', '.') }}
+                        </span>
                     </div>
 
-                    <form action="{{ route('checkout.process') }}" method="POST">
+                    {{-- ======================== --}}
+                    {{-- METODE PENGIRIMAN --}}
+                    {{-- ======================== --}}
+                    <form action="{{ route('checkout.process') }}" method="POST" class="mt-3">
                         @csrf
-                        <button type="submit" class="btn btn-brand w-100 mt-4">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Metode Pengiriman</label>
+                            <select class="form-select" name="shipping_method" id="shipping_method">
+                                <option value="delivery">Diantar (Delivery)</option>
+                                <option value="pickup">Ambil di Tempat (Gratis)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-brand w-100 mt-3">
                             Lanjutkan ke Pembayaran
                         </button>
                     </form>
@@ -75,4 +91,26 @@
 
     </div>
 </div>
+
+{{-- ======================== --}}
+{{-- SCRIPT UPDATE ONGKIR --}}
+{{-- ======================== --}}
+<script>
+document.getElementById('shipping_method').addEventListener('change', function () {
+    const ongkirNormal = {{ $ongkir }};
+    const subtotal = {{ $subtotal }};
+    
+    if (this.value === 'pickup') {
+        document.getElementById('ongkir_display').innerText = "Rp 0 (Pickup)";
+        document.getElementById('total_display').innerText =
+            "Rp " + subtotal.toLocaleString('id-ID');
+    } else {
+        document.getElementById('ongkir_display').innerText =
+            "Rp " + ongkirNormal.toLocaleString('id-ID');
+        document.getElementById('total_display').innerText =
+            "Rp " + (subtotal + ongkirNormal).toLocaleString('id-ID');
+    }
+});
+</script>
+
 @endsection

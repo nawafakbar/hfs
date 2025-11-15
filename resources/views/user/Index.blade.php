@@ -140,7 +140,7 @@
                     <p class="mb-3">
                         Get the full list of our fresh products, updated daily with new arrivals and special offers.
                     </p>
-                    <a href="#" class="btn btn-orange">
+                    <a href="https://www.instagram.com/bgd_hydrofarm/" target="_blank" class="btn btn-orange">
                         See The Catalog <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                 </div>

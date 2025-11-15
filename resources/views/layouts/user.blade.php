@@ -86,12 +86,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5 class="fw-bold">Bgd_Hydrofarm</h5>
+                    <h5 class="">Bgd_Hydrofarm</h5>
                     <p class="text-white-50">Providing fresh, healthy, and locally grown hydroponic vegetables for your
                         family's needs.</p>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6 mb-4 mb-lg-0">
-                    <h5 class="fw-bold">Page</h5>
+                    <h5 class="">Page</h5>
                     <ul class="list-unstyled">
                         <li><a href="{{ route('home') }}">Home</a></li>
                         <li><a href="{{ route('home') }}#produk">Shop</a></li>
@@ -100,18 +100,18 @@
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
-                    <h5 class="fw-bold">Socials</h5>
+                    <h5 class="">Socials</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#">Instagram</a></li>
+                        <li><a href="https://www.instagram.com/bgd_hydrofarm/" target="_blank">Instagram</a></li>
                         <li><a href="#">Facebook</a></li>
                         <li><a href="#">Tiktok</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-4 mb-4 mb-lg-0">
-                    <h5 class="fw-bold">Contact</h5>
+                    <h5 class="">Contact</h5>
                     <ul class="list-unstyled">
                         <li><a href="#">info@bgdhyrofarm.com</a></li>
-                        <li><a href="#">+62 123 4567 890</a></li>
+                        <li><a href="#">+62 898-2678-270</a></li>
                     </ul>
                 </div>
             </div>

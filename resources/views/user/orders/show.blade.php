@@ -41,7 +41,20 @@
                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
                     <h5>Ringkasan</h5>
                     <p class="mb-1"><strong>Tanggal:</strong> {{ $order->created_at->format('d M Y') }}</p>
-                    <p class="mb-1"><strong>Total:</strong> Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                    <p class="mb-1"><strong>Total Harga Barang:</strong> 
+                        Rp {{ number_format($order->subtotal ?? $order->total_amount - $order->shipping_cost, 0, ',', '.') }}
+                    </p>
+
+                    <p class="mb-1"><strong>Ongkir:</strong> 
+                        Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
+                    </p>
+
+                    <hr>
+
+                    <p class="mb-1"><strong>Total Bayar:</strong> 
+                        Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                    </p>
+
                     <p class="mb-1"><strong>Status:</strong> 
                         <span class="badge {{ 
                             match($order->status) {

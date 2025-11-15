@@ -102,11 +102,37 @@
                 @endforeach
             </tbody>
             <tfoot class="fw-bold">
-                <tr>
-                    <td colspan="3" class="text-end">Total</td>
-                    <td class="text-end">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                </tr>
-            </tfoot>
+
+            {{-- Total Harga Barang --}}
+            <tr>
+                <td colspan="3" class="text-end">Total Harga Barang</td>
+                <td class="text-end">
+                    Rp {{ number_format($order->subtotal ?? ($order->total_amount - $order->shipping_cost), 0, ',', '.') }}
+                </td>
+            </tr>
+
+            {{-- Ongkos Kirim --}}
+            <tr>
+                <td colspan="3" class="text-end">Ongkos Kirim</td>
+                <td class="text-end">
+                    Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="4" class="p-1"></td>
+            </tr>
+
+            {{-- Total Bayar --}}
+            <tr class="table-light">
+                <td colspan="3" class="text-end">Total Bayar</td>
+                <td class="text-end">
+                    Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                </td>
+            </tr>
+
+        </tfoot>
+
         </table>
 
         <!-- Footer -->

@@ -102,21 +102,48 @@
         try {
             $token = env('TELEGRAM_BOT_TOKEN');
             $chatId = env('TELEGRAM_CHAT_ID');
-            $user = $order->user; // Ambil data user dari relasi order
+            $user = $order->user;
             $adminLink = route('admin.orders.show', $order->id);
 
-            // PESAN BARU YANG LEBIH RELEVAN
+            // Tentukan teks pengiriman
+            $jenisPengiriman = $order->shipping_method === 'pickup'
+                ? "Ambil di Gudang (GRATIS)"
+                : "Diantar ke Alamat";
+
+            // Format ongkir
+            $ongkirText = $order->shipping_method === 'pickup'
+                ? 0
+                : $order->shipping_cost;
+
+            // Format angka
+            $format = fn($n) => "Rp " . number_format($n, 0, ',', '.');
+
+            // Hitung subtotal (total tanpa ongkir)
+            $subtotal = $order->total_amount - $ongkirText;
+
+            // ======= PESAN =======
             $message  = "🔔 *Notifikasi Pesanan Baru* 🔔\n\n";
             $message .= "Ada pesanan baru masuk!\n\n";
-            $message .= "*Invoice:* " . $order->invoice_number . "\n";
-            $message .= "*Total:* Rp " . number_format($order->total_amount, 0, ',', '.') . "\n";
-            $message .= "*Nama:* " . $user->name . "\n";
-            $message .= "*No. HP:* " . $user->phone_number . "\n";
-            $message .= "*Alamat:* " . $user->address . "\n\n"; // <-- ALAMAT DITAMBAHKAN
+
+            $message .= "*Invoice:* {$order->invoice_number}\n";
+            $message .= "*Nama:* {$user->name}\n";
+            $message .= "*No. HP:* {$user->phone_number}\n";
+            $message .= "*Alamat:* {$user->address}\n\n";
+
+            // ======= DETAIL HARGA =======
+            $message .= "*🧾 Rincian Harga*\n";
+            $message .= "Subtotal: " . $format($subtotal) . "\n";
+            $message .= "Ongkos Kirim: " . $format($ongkirText) . "\n";
             $message .= "----------------------------------------\n";
-            $message .= "Silakan *cek dan verifikasi* pesanan ini dengan mengklik link di bawah:\n";
-            $message .= $adminLink . "\n\n"; // <-- LINK ADMIN DITAMBAHKAN
-            $message .= "Website: https://bgdhydrofarm.com"; // <-- LINK WEBSITE DITAMBAHKAN
+            $message .= "*Total Akhir: " . $format($order->total_amount) . "*\n\n";
+
+            // ======= INFO PENGIRIMAN =======
+            $message .= "*Metode Pengiriman:* {$jenisPengiriman}\n";
+
+            $message .= "----------------------------------------\n";
+            $message .= "Klik link berikut untuk mengecek detail pesanan:\n";
+            $message .= $adminLink . "\n\n";
+            $message .= "Website: https://bgdhydrofarm.com";
 
             // Kirim request ke API Telegram
             Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
@@ -126,10 +153,9 @@
             ]);
 
         } catch (\Exception $e) {
-            // Jika pengiriman Telegram gagal, jangan hentikan proses checkout.
-            // Cukup catat errornya di file log.
-            Log::error('Gagal mengirim notifikasi Telegram: ' . $e->getMessage());
+            Log::error("Gagal mengirim Telegram: " . $e->getMessage());
         }
+
         // ===================================
 
             return redirect()->route('orders.index')->with('success', 'Bukti pembayaran berhasil di-upload dan sedang menunggu konfirmasi admin.');

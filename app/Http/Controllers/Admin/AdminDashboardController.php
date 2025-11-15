@@ -16,7 +16,7 @@ class AdminDashboardController extends Controller
         $totalRevenue = Order::where('status', 'completed')->sum('total_amount');
 
         // 2. Jumlah Pesanan Baru (misal statusnya 'paid' atau 'packaging')
-        $newOrdersCount = Order::whereIn('status', ['paid', 'packaging'])->count();
+        $newOrdersCount = Order::whereIn('status', ['paid', 'packaging', 'waiting_confirmation'])->count();
 
         // 3. Jumlah Pelanggan
         $customersCount = User::where('role', 'customer')->count();

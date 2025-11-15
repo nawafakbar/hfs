@@ -34,16 +34,29 @@ class CheckoutController extends Controller
 
         $user = auth()->user();
 
-        // --- HITUNG ONGKIR BERDASARKAN KECAMATAN ---
-        $ongkir = config('ongkir.zona_padang')[$user->kecamatan] ?? 0;
+        $shipping_method = $request->shipping_method; // delivery | pickup
+
+        // --- HITUNG ONGKIR ---
+        if ($shipping_method === 'pickup') {
+            $ongkir = 0;
+            $shipping_address = "Pickup di Gudang BGD Hydrofarm";
+        } else {
+            $ongkir = config('ongkir.zona_padang')[$user->kecamatan] ?? 0;
+            $shipping_address = $user->address;
+        }
+
+        $subtotal = $total;
+        $total_amount = $subtotal + $ongkir;
 
         // --- SIMPAN ORDER ---
         $order = Order::create([
             'user_id' => $user->id,
             'invoice_number' => 'INV-' . time() . '-' . $user->id,
-            'total_amount' => $total + $ongkir,
+            'subtotal' => $subtotal,
             'shipping_cost' => $ongkir,
-            'shipping_address' => $user->address,
+            'total_amount' => $total_amount,
+            'shipping_method' => $shipping_method,
+            'shipping_address' => $shipping_address,
             'status' => 'pending',
         ]);
 
@@ -60,7 +73,6 @@ class CheckoutController extends Controller
         // --- KOSONGKAN CART ---
         $this->getCart()->clear();
 
-        // --- PINDAH KE HALAMAN PEMBAYARAN ---
         return redirect()->route('checkout.payment', $order->invoice_number);
     }
 

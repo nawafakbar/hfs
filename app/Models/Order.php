@@ -9,9 +9,17 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'invoice_number', 'total_amount', 'shipping_address', 
-        'status', 'payment_method', 'shipping_cost',
-        'payment_proof', 'payment_confirmed_at',
+        'user_id',
+        'invoice_number',
+        'subtotal',
+        'total_amount',
+        'shipping_address',
+        'shipping_cost',
+        'shipping_method',
+        'status',
+        'payment_method',
+        'payment_proof',
+        'payment_confirmed_at',
     ];
 
     // Relasi: Satu Order milik satu User
