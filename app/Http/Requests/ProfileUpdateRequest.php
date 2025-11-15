@@ -32,7 +32,7 @@ class ProfileUpdateRequest extends FormRequest
             'address' => ['nullable', 'string'],
 
             // FOTO PROFIL
-            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:10048'],
         ];
     }
 }

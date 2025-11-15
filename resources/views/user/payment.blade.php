@@ -21,9 +21,9 @@
         <div class="payment-card-body">
 
             {{-- GANTI DENGAN PATH GAMBAR QRIS-mu --}}
-            <img src="{{ asset('user-assets/images/qris.jpg') }}" alt="QRIS BGD Hydrofarm" class="payment-qris-image">
+            <img src="{{ asset('user-assets/Images/qris.jpg') }}" alt="QRIS BGD Hydrofarm" class="payment-qris-image">
             <div>
-            <a href="{{ asset('user-assets/images/qris.jpg') }}" download="QRIS_BGD_Hydrofarm.png" class="btn btn-sm btn-outline-success mb-3">
+            <a href="{{ asset('user-assets/Images/qris.jpg') }}" download="QRIS_BGD_Hydrofarm.png" class="btn btn-sm btn-outline-success mb-3">
                 <i class="bi bi-download me-1"></i> Unduh QRIS
             </a>
             </div>
