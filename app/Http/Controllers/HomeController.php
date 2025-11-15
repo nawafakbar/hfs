@@ -24,7 +24,7 @@ class HomeController extends Controller
         $products = $productsQuery->latest()->paginate(12);
 
         // Kirim semua data yang dibutuhkan ke view
-        return view('user.index', [
+        return view('home', [
             'products' => $products,
             'categories' => $categories,
             'activeCategory' => $category, // Variabel untuk menandai kategori mana yang aktif
