@@ -18,7 +18,7 @@
             {{-- Panel Gambar Kiri --}}
             <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center auth-image-panel">
                 <div class="auth-image-arch">
-                    <img src="{{ asset('user-assets/images/image1.png') }}" alt="Hydroponic Greens">
+                    <img src="{{ asset('user-assets/Images/image1.png') }}" alt="Hydroponic Greens">
                 </div>
             </div>
             {{-- Panel Form Kanan (Konten Dinamis) --}}
