@@ -186,7 +186,7 @@
     </section>
 
     {{-- about us --}}
-    <section class="py-5 bg-brand-dark" id="about-me">
+    <section id="about-me" class="py-5 bg-brand-dark">
     <div class="container">
         <div class="row align-items-center">
             <!-- Kolom Gambar Owner/Farm -->
