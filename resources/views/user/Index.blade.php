@@ -1,6 +1,119 @@
 @extends('layouts.user')
 
 @section('content')
+<style>
+    /* Variable warna dan font utama */
+:root {
+    --primary-green: #0d2c23;
+    --dark-green: #0a211a;
+    --brand-orange: #E58444;
+    --light-green: #8BD078;
+    --font-family: 'Poppins', sans-serif;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+/* Styling untuk Floating WhatsApp */
+.float-wa {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #8BD078;
+    color: #FFF;
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.float-wa:hover {
+    background-color: #8BD078;
+    transform: scale(1.1);
+    color: #FFF;
+}
+
+    /* Styling khusus About Me */
+.bg-brand-dark {
+    background-color: #0d2c23; /* Hijau tua elegan */
+    color: white;
+}
+    
+.about-image {
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+    /* Styling Partner */
+.partner-logo {
+    filter: grayscale(0%);
+    transition: all 0.3s;
+    max-height: 80px; /* Batasi tinggi logo */
+    width: auto;
+}
+    
+.partner-logo:hover {
+    filter: grayscale(20%);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Styling Social Media Icons (UPDATE KEREN) */
+.social-icon-btn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1); /* Transparan putih */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek mantul */
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.social-icon-btn:hover {
+    background: #fff;
+    color: #145e3f; /* Warna ikon jadi hijau saat hover */
+    transform: translateY(-5px); /* Naik sedikit */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-color: #fff;
+}
+
+/* artikel */
+.article-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+    .article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+.article-card:hover img {
+    transform: scale(1.05);
+}
+.title-hover {
+    background-image: linear-gradient(to right, #145e3f, #145e3f);
+    background-size: 0% 2px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    transition: background-size 0.3s ease;
+}
+.article-card:hover .title-hover {
+    background-size: 100% 2px;
+    color: #145e3f !important;
+}
+</style>
     {{-- TOMBOL WHATSAPP MENGAMBANG --}}
     <a href="https://wa.me/6285759873301?text=Halo%20BGD%20Hydrofarm%2C%20saya%20tertarik%20dengan%20produk%20hidroponiknya" class="float-wa" target="_blank">
         <i class="bi bi-whatsapp"></i>

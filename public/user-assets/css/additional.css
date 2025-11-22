@@ -89,23 +89,23 @@
 
 /* artikel */
 .article-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
     .article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
-    }
-    .article-card:hover img {
-        transform: scale(1.05);
-    }
-    .title-hover {
-        background-image: linear-gradient(to right, #145e3f, #145e3f);
-        background-size: 0% 2px;
-        background-repeat: no-repeat;
-        background-position: left bottom;
-        transition: background-size 0.3s ease;
-    }
-    .article-card:hover .title-hover {
-        background-size: 100% 2px;
-        color: #145e3f !important;
-    }
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+.article-card:hover img {
+    transform: scale(1.05);
+}
+.title-hover {
+    background-image: linear-gradient(to right, #145e3f, #145e3f);
+    background-size: 0% 2px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    transition: background-size 0.3s ease;
+}
+.article-card:hover .title-hover {
+    background-size: 100% 2px;
+    color: #145e3f !important;
+}
