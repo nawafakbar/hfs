@@ -16,7 +16,7 @@
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background-color: var(--light-green);
+    background-color: #8BD078;
     color: #FFF;
     width: 60px;
     height: 60px;
@@ -32,14 +32,14 @@
 }
 
 .float-wa:hover {
-    background-color: var(--light-green);
+    background-color: #8BD078;
     transform: scale(1.1);
     color: #FFF;
 }
 
     /* Styling khusus About Me */
 .bg-brand-dark {
-    background-color: var(--primary-green); /* Hijau tua elegan */
+    background-color: #0d2c23; /* Hijau tua elegan */
     color: white;
 }
     
