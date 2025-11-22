@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -22,12 +23,14 @@ class HomeController extends Controller
 
         // Ambil hasil produk dengan paginasi (misalnya 12 produk per halaman)
         $products = $productsQuery->latest()->paginate(12);
+        $latestArticles = Article::latest()->take(3)->get();
 
         // Kirim semua data yang dibutuhkan ke view
         return view('user.Index', [
             'products' => $products,
             'categories' => $categories,
             'activeCategory' => $category, // Variabel untuk menandai kategori mana yang aktif
+            'articles' => $latestArticles,
         ]);
     }
 }

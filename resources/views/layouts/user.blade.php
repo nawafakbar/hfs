@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Bgd Hydrofarm - E-Commerce')</title>
+    <link rel="icon" href="{{ asset('user-assets/Images/logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('user-assets/Images/logo.png') }}" type="image/x-icon">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {{-- Panggil CSS dari folder public --}}
+    <link rel="stylesheet" href="{{ asset('user-assets/css/additional.css') }}">
     <link rel="stylesheet" href="{{ asset('user-assets/css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,7 +71,7 @@
             <ul class="navbar-nav mx-auto text-center">
                 <li class="nav-item"><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#produk">Shop</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#about-me">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             </ul>
         </div>

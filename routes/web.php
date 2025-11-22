@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\MidtransCallbackController;
+use App\Http\Controllers\ArticleController;
 
 // Import controller admin
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,7 @@ Route::get('/category/{category:slug}', [HomeController::class, 'index'])->name(
 // Route::get('/shop/category/{category:slug}', [ProductController::class, 'shop'])->name('shop.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.detail');
 // Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');
+Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
 
 // == RUTE UNTUK GOOGLE LOGIN ==
 Route::get('/auth/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
@@ -97,6 +100,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::resource('testimonials', AdminTestimonialController::class)->only(['index', 'update', 'destroy']);
     Route::resource('customers', CustomerController::class)->except(['create', 'store']);
+    Route::resource('articles', AdminArticleController::class);
 });
 
 
