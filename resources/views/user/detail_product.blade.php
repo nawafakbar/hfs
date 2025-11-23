@@ -66,7 +66,7 @@
             </form>
 
                 {{-- META PRODUK --}}
-                <div class="product-meta">
+                <div class="product-meta mt-2">
                     <p><strong>Categories:</strong> 
                         <a href="#" class="badge bg-light text-dark">{{ $product->category->name }}</a>
                         <strong class="ms-3">Stok: </strong> 
