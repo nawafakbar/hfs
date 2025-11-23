@@ -14,7 +14,7 @@ class HomeController extends Controller
         $categories = Category::latest()->get();
         
         // Mulai query untuk produk
-        $productsQuery = Product::query();
+        $productsQuery = Product::where('stock', '>', 0);
 
         // Jika ada objek $category yang dikirim dari URL, filter produknya
         if ($category) {

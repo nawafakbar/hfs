@@ -39,15 +39,28 @@
                 <p class="text-muted">{{ Str::limit($product->description, 150) }}</p>
 
                 {{-- FORM ADD TO CART --}}
-                <form action="{{ route('cart.add') }}" method="POST">
+                <form action="{{ route('cart.add', $product->id) }}" method="POST">
                 @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <div class="d-flex align-items-center my-4">
-                    <div class="input-group quantity-selector me-3">
-                        <button class="btn btn-outline-secondary" type="button" id="button-minus">-</button>
-                        <input type="text" name="quantity" class="form-control text-center" value="1" id="quantity-input">
-                        <button class="btn btn-outline-secondary" type="button" id="button-plus">+</button>
-                    </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3 fw-bold">Jumlah:</label>
+                    
+                    {{-- Input Jumlah --}}
+                    <input type="number" 
+                        name="quantity" 
+                        class="form-control text-center" 
+                        value="1" 
+                        min="1" 
+                        max="{{ $product->stock }}" 
+                        style="width: 80px;"
+                        oninput="if(parseInt(this.value) > {{ $product->stock }}) this.value = {{ $product->stock }};">
+                        {{-- Script oninput di atas memaksa angka kembali ke max jika user mengetik manual berlebihan --}}
+                </div>
+
+                {{-- Info Stok Tersisa (Opsional tapi bagus buat UX) --}}
+                <div class="mb-3 text-muted">
+                    <small>Stok tersedia: <strong>{{ $product->stock }}</strong> ikat</small>
+                </div>
                     <button type="submit" class="btn btn-brand flex-grow-1">Add to Cart</button>
                 </div>
             </form>

@@ -40,7 +40,7 @@
             </div>
 
             {{-- Konten Artikel --}}
-            <div class="article-content text-secondary mb-5 px-3" style="text-align: justify;">
+            <div class="article-content text-secondary mb-5 px-2" style="text-align: justify;">
                 {!! nl2br(e($article->content)) !!}
             </div>
 
