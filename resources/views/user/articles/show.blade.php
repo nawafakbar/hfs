@@ -13,7 +13,7 @@
             </nav>
 
             {{-- Judul Utama --}}
-            <h1 class="display-5 fw-bold mb-4">{{ $article->title }}</h1>
+            <h1 class="display-5 mb-4">{{ $article->title }}</h1>
 
             {{-- Meta Info --}}
             <div class="d-flex align-items-center mb-4 text-muted border-bottom pb-4">
@@ -23,7 +23,7 @@
                     </div>
                     <div>
                         <small class="d-block lh-1">Penulis</small>
-                        <span class="fw-bold text-dark">{{ $article->author }}</span>
+                        <span class="text-dark">{{ $article->author }}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -40,7 +40,7 @@
             </div>
 
             {{-- Konten Artikel --}}
-            <div class="article-content fs-5 lh-lg text-secondary mb-5" style="text-align: justify;">
+            <div class="article-content text-secondary mb-5 px-3" style="text-align: justify;">
                 {!! nl2br(e($article->content)) !!}
             </div>
 

@@ -70,7 +70,7 @@
                                  style="height: 220px;">
                             
                             {{-- Badge Tanggal --}}
-                            <div class="position-absolute top-0 start-0 bg-white px-3 py-1 m-3 rounded-3 shadow-sm text-center border-start border-4 border-success">
+                            <div class="position-absolute top-0 start-0 bg-white px-1 py-1 m-3 rounded-3 shadow-sm text-center border-start border-4 border-success">
                                 <small class="fw-bold text-dark d-block">{{ $article->created_at->format('d M') }}</small>
                                 <small class="text-muted" style="font-size: 10px;">{{ $article->created_at->format('Y') }}</small>
                             </div>
