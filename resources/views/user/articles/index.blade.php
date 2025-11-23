@@ -19,16 +19,16 @@
 </style>
 
 {{-- HEADER SECTION --}}
-<section class="bg-header py-5">
+<section class="bg-header py-5 mt-5">
     <div class="container text-center py-4">
-        <h1 class="display-4 fw-bold mb-3">Blog & Kegiatan</h1>
-        <p class="lead mb-4" style="opacity: 0.9;">Berita terbaru, tips hidroponik, dan kegiatan seru dari kebun kami.</p>
+        <h1 class="display-6 fw-bold mb-3">Blog & Kegiatan</h1>
+        <p class="mb-4" style="opacity: 0.9;">Berita terbaru, tips hidroponik, dan kegiatan seru dari kebun kami.</p>
         
         {{-- SEARCH FORM --}}
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <form action="{{ route('articles.index') }}" method="GET">
-                    <div class="input-group input-group-lg shadow-sm">
+                    <div class="input-group input-group-sm shadow-sm">
                         <input type="text" name="search" class="form-control border-0" placeholder="Cari artikel..." value="{{ request('search') }}">
                         <button class="btn btn-warning px-4 fw-bold" type="submit">
                             <i class="bi bi-search"></i> Cari
