@@ -39,34 +39,23 @@
                 <p class="text-muted">{{ Str::limit($product->description, 150) }}</p>
 
                 {{-- FORM ADD TO CART --}}
-                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                <form action="{{ route('cart.add') }}" method="POST">
                 @csrf
-                
-                <div class="d-flex align-items-center mb-3">
-                    <label class="me-3 fw-bold">Jumlah:</label>
-                    
-                    {{-- Input Jumlah --}}
-                    <input type="number" 
-                        name="quantity" 
+                <input type="number" 
+                        name="product_id" 
                         class="form-control text-center" 
                         value="1" 
                         min="1" 
                         max="{{ $product->stock }}" 
                         style="width: 80px;"
                         oninput="if(parseInt(this.value) > {{ $product->stock }}) this.value = {{ $product->stock }};">
-                        {{-- Script oninput di atas memaksa angka kembali ke max jika user mengetik manual berlebihan --}}
-                </div>
-
-                {{-- Info Stok Tersisa (Opsional tapi bagus buat UX) --}}
-                <div class="mb-3 text-muted">
-                    <small>Stok tersedia: <strong>{{ $product->stock }}</strong> ikat</small>
-                </div>
+                <div class="d-flex align-items-center my-4">
                     <button type="submit" class="btn btn-brand flex-grow-1">Add to Cart</button>
                 </div>
             </form>
 
                 {{-- META PRODUK --}}
-                <div class="product-meta mt-2">
+                <div class="product-meta">
                     <p><strong>Categories:</strong> 
                         <a href="#" class="badge bg-light text-dark">{{ $product->category->name }}</a>
                         <strong class="ms-3">Stok: </strong> 
