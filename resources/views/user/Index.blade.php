@@ -397,7 +397,7 @@
                 <h2 class="fw-bold mb-0 mt-2">Story From Garden</h2>
             </div>
             {{-- Tombol lihat semua (opsional, bisa diarahkan ke halaman arsip nanti) --}}
-            <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">View All</a>
+            <a href="{{ route('articles.index') }}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">View All</a>
         </div>
 
         <div class="row g-4">
@@ -457,7 +457,7 @@
         
         {{-- Tombol lihat semua (versi mobile) --}}
         <div class="text-center mt-4 d-md-none">
-            <a href="#" class="btn btn-outline-dark rounded-pill px-4 w-100">View All</a>
+            <a href="{{ route('articles.index') }}" class="btn btn-outline-dark rounded-pill px-4 w-100">View All</a>
         </div>
     </div>
 </section>

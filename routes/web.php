@@ -35,6 +35,7 @@ Route::get('/category/{category:slug}', [HomeController::class, 'index'])->name(
 // Route::get('/shop/category/{category:slug}', [ProductController::class, 'shop'])->name('shop.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.detail');
 // Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');
+Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
 
 // == RUTE UNTUK GOOGLE LOGIN ==
