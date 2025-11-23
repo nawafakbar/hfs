@@ -5,7 +5,7 @@
     <h2 class="auth-title mb-3">Verifikasi Alamat Email Anda</h2>
     
     <p class="auth-subtitle mb-4">
-        Terima kasih telah mendaftar! Sebelum melanjutkan, bisakah Anda memverifikasi alamat email Anda dengan mengklik link yang baru saja kami kirimkan? Jika Anda tidak menerima email, kami akan dengan senang hati mengirimkan yang lain.
+        Terima kasih telah mendaftar! Sebelum melanjutkan, bisakah Anda memverifikasi alamat email Anda dengan mengklik link yang baru saja kami kirimkan? Jika Anda tidak menerima email, silahkan daftar menggunakan akun google.
     </p>
 
     @if (session('status') == 'verification-link-sent')

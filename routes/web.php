@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 // Import semua controller yang kita butuhkan
 use App\Http\Controllers\HomeController;
@@ -101,6 +102,20 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::resource('testimonials', AdminTestimonialController::class)->only(['index', 'update', 'destroy']);
     Route::resource('customers', CustomerController::class)->except(['create', 'store']);
     Route::resource('articles', AdminArticleController::class);
+});
+
+
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('Halo bro, ini tes email dari Hostinger ke Gmail. Kalau ini masuk, berarti server aman.', function ($message) {
+            // Ganti dengan email Gmail tujuanmu
+            $message->to('nwfakbart@gmail.com')
+                    ->subject('Tes Koneksi Email Laravel');
+        });
+        return 'Email berhasil dikirim oleh Laravel. Cek inbox/spam Gmail sekarang.';
+    } catch (\Exception $e) {
+        return 'Gagal kirim: ' . $e->getMessage();
+    }
 });
 
 
