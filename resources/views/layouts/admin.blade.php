@@ -39,6 +39,19 @@
                         <span class="nav-link-title">Dashboard</span>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('admin.reports') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.reports.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 3a3 3 0 0 0 -3 3v12a3 3 0 0 0 6 0v-12a3 3 0 0 0 -3 -3z" />
+                                <path d="M9 10h6" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-title">Keuangan</span>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('admin.categories.index') }}">
                         <span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M7 7m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /></svg></span>

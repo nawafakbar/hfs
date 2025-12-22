@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,10 +100,16 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::resource('categories', CategoryController::class);
     // Kita gunakan alias 'AdminProductController' agar tidak bentrok
     Route::resource('products', AdminProductController::class); 
-    Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('orders', OrderController::class)->only(['index', 'show', 'update', 'destroy', 'create', 'store']);
+    // Route::get('/orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create');
+    // Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store');
     Route::resource('testimonials', AdminTestimonialController::class)->only(['index', 'update', 'destroy']);
     Route::resource('customers', CustomerController::class)->except(['create', 'store']);
     Route::resource('articles', AdminArticleController::class);
+    // Halaman Laporan Keuangan
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/pdf', [ReportController::class, 'exportPdf'])->name('reports.pdf');
+    Route::get('/reports/excel', [ReportController::class, 'exportExcel'])->name('reports.excel');  
 });
 
 
