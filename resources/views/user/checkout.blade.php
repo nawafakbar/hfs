@@ -3,114 +3,126 @@
 @section('content')
 
 @php
-    $user = auth()->user();
-    $kecamatan = $user->kecamatan;
-    $ongkir = config('ongkir.zona_padang')[$kecamatan] ?? 0;
-    $subtotal = Cart::getTotal();
+    $subtotal = Cart::session(auth()->id())->getTotal();
 @endphp
 
 <div class="container py-5" style="margin-top: 100px;">
     <h2 class="mb-4">Konfirmasi Pesanan</h2>
 
     <div class="row">
-
-        <!-- ========================== -->
-        <!-- ALAMAT PENGIRIMAN -->
-        <!-- ========================== -->
         <div class="col-md-7">
             <div class="card mb-3">
-                <div class="card-body">
+                <div class="card-body text-start p-5" style="background-color: rgba(0, 0, 0, 0.04); border-radius: 12px;">
                     <h4 class="card-title">Alamat Pengiriman</h4>
                     <hr>
-                    <p><strong>{{ $user->name }}</strong></p>
-                    <p>{{ $user->phone_number }}</p>
-                    <p>{{ $user->address }}</p>
-
-                    <p><strong>Kecamatan:</strong> {{ $user->kecamatan }}</p>
-
+                    <p class="fw-bold mb-1">{{ $user->name }}</p>
+                    <p class="mb-1">{{ $user->phone_number }}</p>
+                    <p class="mb-3">
+                        {{ $user->address }} <br>
+                        Kec. {{ $user->kecamatan }}, {{ $user->kota }} <br>
+                        {{ $user->provinsi }}
+                    </p>
                     <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-secondary">
-                        Ubah Alamat
+                        <i class="bi bi-pencil-square"></i> Ubah Alamat
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- ========================== -->
-        <!-- RINGKASAN PESANAN -->
-        <!-- ========================== -->
         <div class="col-md-5">
-            <div class="card">
-                <div class="card-body">
-
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
                     <h4 class="card-title">Ringkasan Pesanan</h4>
                     <hr>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        <span class="fw-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <span>Ongkir ({{ $kecamatan }})</span>
-                        <span id="ongkir_display">
-                            Rp {{ number_format($ongkir, 0, ',', '.') }}
-                        </span>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Biaya Pengiriman</span>
+                        <span id="ongkir_display" class="fw-bold text-muted">Rp 0</span>
                     </div>
 
                     <hr>
 
-                    <div class="d-flex justify-content-between fw-bold">
-                        <span>Total</span>
-                        <span id="total_display">
-                            Rp {{ number_format($subtotal + $ongkir, 0, ',', '.') }}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="h5 mb-0">Total Bayar</span>
+                        <span id="total_display" class="h4 mb-0 text-black fw-bold">
+                            Rp {{ number_format($subtotal, 0, ',', '.') }}
                         </span>
                     </div>
 
-                    {{-- ======================== --}}
-                    {{-- METODE PENGIRIMAN --}}
-                    {{-- ======================== --}}
-                    <form action="{{ route('checkout.process') }}" method="POST" class="mt-3">
+                    <form action="{{ route('checkout.process') }}" method="POST">
                         @csrf
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Pilih Layanan Pengiriman</label>
+                            
+                            <select class="form-select mb-3" name="shipping_cost" id="shipping_cost" required>
+                                <option value="" disabled selected>-- Pilih Kurir --</option>
+                                
+                                <option value="0" data-courier="Ambil di Toko (Pickup)">
+                                    Ambil di Toko (Pickup) - Rp 0
+                                </option>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Metode Pengiriman</label>
-                            <select class="form-select" name="shipping_method" id="shipping_method">
-                                <option value="delivery">Diantar (Delivery)</option>
-                                <option value="pickup">Ambil di Tempat (Gratis)</option>
+                                @if(!empty($ongkirResults))
+                                    @foreach($ongkirResults as $result)
+                                        <option value="{{ $result['cost'] }}" 
+                                                data-courier="{{ $result['name'] }} - {{ $result['service'] }} ({{ $result['description'] }})">
+                                            
+                                            {{-- TAMPILAN DI DROPDOWN --}}
+                                            {{ $result['code'] }} {{ $result['service'] }} - Rp {{ number_format($result['cost'], 0, ',', '.') }} 
+                                            @if(!empty($result['etd'])) (Est: {{ $result['etd'] }}) @endif
+
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="" disabled>Tidak ada layanan pengiriman tersedia.</option>
+                                @endif
                             </select>
+
+                            <input type="hidden" name="shipping_method" id="shipping_method">
+                            <span class="mt-4 text-danger">NOTE: Jika alamat mu masih berada di region padang silahkan pilih JNT EZ!</span>
                         </div>
 
-                        <button type="submit" class="btn btn-brand w-100 mt-3">
-                            Lanjutkan ke Pembayaran
+                        <button type="submit" class="btn btn-secondary w-100 py-2 fw-bold" id="btn-bayar">
+                            Lanjutkan Pembayaran <i class="bi bi-arrow-right"></i>
                         </button>
                     </form>
 
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-{{-- ======================== --}}
-{{-- SCRIPT UPDATE ONGKIR --}}
-{{-- ======================== --}}
 <script>
-document.getElementById('shipping_method').addEventListener('change', function () {
-    const ongkirNormal = {{ $ongkir }};
-    const subtotal = {{ $subtotal }};
-    
-    if (this.value === 'pickup') {
-        document.getElementById('ongkir_display').innerText = "Rp 0 (Pickup)";
-        document.getElementById('total_display').innerText =
-            "Rp " + subtotal.toLocaleString('id-ID');
-    } else {
-        document.getElementById('ongkir_display').innerText =
-            "Rp " + ongkirNormal.toLocaleString('id-ID');
-        document.getElementById('total_display').innerText =
-            "Rp " + (subtotal + ongkirNormal).toLocaleString('id-ID');
-    }
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectOngkir = document.getElementById('shipping_cost');
+        const displayOngkir = document.getElementById('ongkir_display');
+        const displayTotal = document.getElementById('total_display');
+        const inputMethod = document.getElementById('shipping_method');
+        const subtotal = {{ $subtotal }};
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        selectOngkir.addEventListener('change', function () {
+            const ongkirPrice = parseInt(this.value) || 0;
+            
+            const selectedOption = this.options[this.selectedIndex];
+            const courierName = selectedOption.getAttribute('data-courier');
+            
+            displayOngkir.innerText = formatRupiah(ongkirPrice);
+            const grandTotal = subtotal + ongkirPrice;
+            displayTotal.innerText = formatRupiah(grandTotal);
+
+            inputMethod.value = courierName;
+        });
+    });
 </script>
 
 @endsection
