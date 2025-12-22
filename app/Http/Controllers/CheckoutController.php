@@ -13,7 +13,7 @@ use Cart;
 class CheckoutController extends Controller
 {
     // CONFIG SAYA HARDCODE BIAR GAK ADA ISU CACHE LAGI
-    private $apiKey = 'Ytw5qRf84a9615933dd0698eBJNsOede'; 
+    private $apiKey = 'hDLAqmhL2f8898ec92d6259eEtgnVFwe'; 
     private $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
     private $originId = 4031; // Nanggalo (ID Toko)
 
