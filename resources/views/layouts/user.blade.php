@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Bgd Hydrofarm - E-Commerce')</title>
     <link rel="icon" href="{{ asset('user-assets/Images/logo.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('user-assets/Images/logo.png') }}" type="image/x-icon">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     {{-- Panggil CSS dari folder public --}}
     {{-- <link rel="stylesheet" href="{{ asset('user-assets/css/additional.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('user-assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-assets/css/chatbot.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -125,6 +128,38 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleChatbot() {
+        const popup = document.getElementById('chatbotPopup');
+        popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function sendChat() {
+        const input = document.getElementById('chatbotInput');
+        const body = document.getElementById('chatbotBody');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        body.innerHTML += `<div class="user-message">${message}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        fetch("{{ route('chatbot.send') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            body.innerHTML += `<div class="bot-message">${data.reply}</div>`;
+            body.scrollTop = body.scrollHeight;
+        });
+    }
+    </script>
     @stack('scripts')
 </body>
 </html>

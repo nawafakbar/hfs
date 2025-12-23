@@ -114,6 +114,31 @@
     color: #145e3f !important;
 }
 </style>
+    <!-- CHATBOT ICON -->
+        <div class="chatbot-icon" onclick="toggleChatbot()">
+            <i class="fas fa-robot"></i>
+        </div>
+
+        <!-- CHATBOT POPUP -->
+        <div class="chatbot-popup" id="chatbotPopup">
+            <div class="chatbot-header">
+                <span>Chat Hidroponik 🌱</span>
+                <button onclick="toggleChatbot()">✕</button>
+            </div>
+
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="bot-message">
+                    Halo 👋  
+                    Saya asisten hidroponik.  
+                    Silakan tanya seputar tanaman, nutrisi, NFT, DFT, dll 🌿
+                </div>
+            </div>
+
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Tulis pertanyaan..." />
+                <button onclick="sendChat()">➤</button>
+            </div>
+        </div>
     {{-- TOMBOL WHATSAPP MENGAMBANG --}}
     <a href="https://wa.me/6285759873301?text=Halo%20BGD%20Hydrofarm%2C%20saya%20tertarik%20dengan%20produk%20hidroponiknya" class="float-wa" target="_blank">
         <i class="bi bi-whatsapp"></i>

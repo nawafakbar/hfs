@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\MidtransCallbackController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ChatbotController;
 
 // Import controller admin
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -32,6 +33,8 @@ use App\Http\Controllers\Admin\ReportController;
 // == RUTE UNTUK PENGUNJUNG BIASA (PUBLIC) ==
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/category/{category:slug}', [HomeController::class, 'index'])->name('home.category');
+Route::post('/chatbot', [ChatbotController::class, 'chatbot'])
+    ->name('chatbot.send');
 // Route::get('/shop', [ProductController::class, 'shop'])->name('shop.index');
 // Route::get('/shop/category/{category:slug}', [ProductController::class, 'shop'])->name('shop.category');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.detail');
